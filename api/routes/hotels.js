@@ -1,51 +1,46 @@
+/**
+ * @swagger
+ * /api/:
+ *   get:
+ *     summary: Get a list of users
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               users: []
+ */
+
+
+
+
 import express from "express";
-import Hotel from "../models/Hotel.js";
-import bodyParser from "body-parser";
+import { createHotel,deleteHotel, getAllHotel, getHotel, updateHotel,countByCity, countByType, getHotelRooms } from "../controller/hotel.js";
+import { verifyAdmin } from "../utils/verifyToken.js";
 
 const router = express.Router();
 
 
+
 //GET ALL 
-router.get('/', async (req, res) => {
-    try {
-        const hotel = await Hotel.find();
-        res.json(hotel);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
-});
+router.get('/', getAllHotel)
+
+//GET ONE
+router.get('/find/:id', getHotel)
+    
+
 //CREATE
-router.post("/create", async (req,res)=>{
-    const newHotel = new Hotel(req.body)    
-    try {
-        const saveHotel = await newHotel.save()
-        res.status(200).json(saveHotel)
-    } catch (error) {
-        res.status(500),json(error)
-    }
-});
+router.post("/create", verifyAdmin, createHotel);
 
 //UPDATE
-router.put("/update/:id", async (req, res) => {
-    try {
-        const updatedHotel = await Hotel.findByIdAndUpdate(
-            req.params.id, 
-            {$set: req.body },
-             { new: true });
-        res.json(updatedHotel);
-    } catch (err) {
-        res.status(400).json({ message: err.message });
-    }
-});
+router.put("/update/:id", verifyAdmin, updateHotel); 
 
 //DELETE
-router.delete('/delete/:id', async (req, res) => {
-    try {
-        await Hotel.findByIdAndRemove(req.params.id);
-        res.json({ message: 'Hotel deleted' });
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
-});
+router.delete('/delete/:id', verifyAdmin, deleteHotel);
+
+router.get("/countByCity", countByCity);
+router.get("/countByType", countByType);
+router.get("/room/:id", getHotelRooms);
 
 export default router
