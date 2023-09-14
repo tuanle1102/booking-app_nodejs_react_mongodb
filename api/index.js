@@ -5,6 +5,7 @@ import authRoute from "./routes/auth.js"
 import usersRoute from "./routes/users.js"
 import roomsRoute from "./routes/rooms.js"
 import hotelsRoute from "./routes/hotels.js"
+import OrderRoute from "./routes/order.js"
 import cookieParser from "cookie-parser"
 import swaggerJSDoc from "swagger-jsdoc"
 import swaggerUi from "swagger-ui-express"
@@ -29,6 +30,8 @@ const connect = async () => {
 //middlewares
 app.use(express.json())
 app.use(cookieParser())
+
+app.use("/api/order", OrderRoute)
 
 app.use("/api/auth", authRoute);
 

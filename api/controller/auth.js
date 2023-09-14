@@ -2,10 +2,17 @@ import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
+export const checkAdminAccess = (req, res, next) => {
+    if (req.user.isAdmin) {
+      next(); 
+    } else {
+      res.status(403).json({ message: 'Access Forbidden' }); // Ngăn truy cập nếu isAdmin là false
+    }
+  };
+  
 
 export const register = async (req,res,next) => {
     try {
-
         const salt = bcrypt.genSaltSync(10);
         const hash = bcrypt.hashSync(req.body.password,salt)
         const newUser = new User({

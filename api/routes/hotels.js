@@ -17,17 +17,17 @@
 
 import express from "express";
 import { createHotel,deleteHotel, getAllHotel, getHotel, updateHotel,countByCity, countByType, getHotelRooms } from "../controller/hotel.js";
-import { verifyAdmin } from "../utils/verifyToken.js";
+import { verifyAdmin, verifyUser } from "../utils/verifyToken.js";
 
 const router = express.Router();
 
 
 
 //GET ALL 
-router.get('/', getAllHotel)
+router.get('/', verifyAdmin,getAllHotel)
 
 //GET ONE
-router.get('/find/:id', getHotel)
+router.get('/find/:id', verifyUser,getHotel)
     
 
 //CREATE
